@@ -61,7 +61,7 @@ int dataLength;     //数据长度
 
 vector<tokenElement> token; //token序列
 vector<symbolElement> symbol; //符号表
-vector<float> constl;//常数表
+vector<string> constl;//常数表
 
 
 vector<string> identifier; //标识符或常量栈
@@ -177,6 +177,18 @@ string whatsTheType(string st) {
 int isSymbol(string st){
     for (int i = 0; i < symbol.size(); i++){
         if (st == symbol[i].NAME) return i;
+    }
+    return -1;
+}
+
+
+/*判断是否是常数
+ 输入：待检测元素（字符串）
+ 输出：若是返回编号，不是返回-1（整型）
+ */
+int isConstant(string st){
+    for (int i = 0; i < constl.size(); i++){
+        if (st == constl[i]) return i;
     }
     return -1;
 }

@@ -14,8 +14,6 @@ using namespace std;
  输出：无
  */
 void morphologyInit() {
-    constl.push_back(1);
-    constl.push_back(0);
     symbolElement mainElement = {"main", "NULL", "p", {"F",0}};
     symbol.push_back(mainElement);
     
@@ -231,12 +229,20 @@ tokenElement searchElement(char* tempString)
 {
     string temp = tempString;
 
-    if (temp == "true") {    //判断是不是布尔型的true
-        tokenElement tempTE = {"C",0,temp};
-        return tempTE;
-    }
-    else if (temp == "false") {      //判断是不是布尔型的false
-        tokenElement tempTE = {"C",1,temp};
+    if (isNumber(temp[0]) || temp == "true" || temp == "false"){
+        for (int i = 2; i < constl.size(); i++) {  //判断是不是常数表中出现过的
+            if (constl[i] == tempString) {
+                tokenElement tempTE = {"C",i,temp};
+                return tempTE;
+            }
+        }
+        
+        //添加进入常数表中
+        constl.push_back(tempString);
+        tokenElement tempTE;
+        tempTE.FORMNAME = "C";
+        tempTE.No = (int)constl.size()-1;
+        tempTE.ORI = temp;
         return tempTE;
     }
     else if (isCharacter(temp[0])) {
@@ -260,25 +266,6 @@ tokenElement searchElement(char* tempString)
         tokenElement tempTE;
         tempTE.FORMNAME = "S";
         tempTE.No = (int)symbol.size()-1;
-        tempTE.ORI = temp;
-        return tempTE;
-    }
-    else if(isNumber(temp[0])){
-
-
-
-        for (int i = 2; i < constl.size(); i++) {  //判断是不是常数表中出现过的
-            if (constl[i] == atof(tempString)) {
-                tokenElement tempTE = {"C",i,temp};
-                return tempTE;
-            }
-        }
-
-                                                    //添加进入常数表中
-        constl.push_back(atof(tempString));
-        tokenElement tempTE;
-        tempTE.FORMNAME = "C";
-        tempTE.No = (int)constl.size()-1;
         tempTE.ORI = temp;
         return tempTE;
     }

@@ -49,64 +49,64 @@ string generateTargetCode(){
     string * cursor = &mainTarget;      // 指向哪个函数需要加
     
     
-//    for (int i = 0; i < quad.size(); i++) {
-//        if (quad[i].first == "main") {
-//            *cursor += "main: MOV AX,DSEG\n";
-//            *cursor += "MOV DS,AX\n";
-//            *cursor += "MOV AX,SSEG\n";
-//            *cursor += "MOV SS,AX\n";
-//            *cursor += "MOV SP,SIZE STK\n";
-//            *cursor += "LEA SI,DATA\n";
-//        }
-//        else if ((quad[i].first == "=" && quad[i].second != "res")|| quad[i].first == ":"){
-//            mainTarget += "MOV"
-//        }
-//        else if (quad[i].first == "=" && quad[i].second == "res"){
-//            
-//        }
-//        else if (quad[i].first == "while"){
-//    
-//        }
-//        else if (quad[i].first == "end" && quad[i].second == "while"){
-//            
-//        }
-//        else if (quad[i].first == "if"){
-//            
-//        }
-//        else if (quad[i].first == "else"){
-//            
-//        }
-//        else if (quad[i].first == "end" && quad[i].second == "if"){
-//            
-//        }
-//        else if (quad[i].first == "call"){
-//            
-//        }
-//        else if (quad[i].first == "func"){
-//            
-//        }
-//        else if (quad[i].first == "rtn"){
-//            
-//        }
-//        else if (quad[i].first == "end" && quad[i].second == "func"){
-//            
-//        }
-//        else if (isArithmeticalOperator(quad[i].first)){     //算数运算符号
-//            
-//        }
-//        else if (isLogicalOperator(quad[i].first)){     //逻辑运算符号
-//            
-//        }
-//        else if (quad[i].first == ",") {
-//            
-//        }
-//        else if (quad[i].first == "end" && quad[i].second == "main"){
-//            *cursor += "MOV AH,4CH\n";
-//            *cursor += "INT 21H\n";
-//            *cursor += "CSEG ENDS\n";
-//            *cursor += "END MAIN\n";
-//        }
-//    }
+    for (int i = 0; i < quad.size(); i++) {
+        if (quad[i].first == "main") {
+            *cursor += "main: MOV AX,DSEG\n";
+            *cursor += "MOV DS,AX\n";
+            *cursor += "MOV AX,SSEG\n";
+            *cursor += "MOV SS,AX\n";
+            *cursor += "MOV SP,SIZE STK\n";
+            *cursor += "LEA SI,DATA\n";
+        }
+        else if ((quad[i].first == "=" && quad[i].second != "res")|| quad[i].first == ":"){
+            mainTarget += "MOV";
+        }
+        else if (quad[i].first == "=" && quad[i].second == "res"){
+            
+        }
+        else if (quad[i].first == "while"){
+    
+        }
+        else if (quad[i].first == "end" && quad[i].second == "while"){
+            
+        }
+        else if (quad[i].first == "if"){
+            
+        }
+        else if (quad[i].first == "else"){
+            
+        }
+        else if (quad[i].first == "end" && quad[i].second == "if"){
+            
+        }
+        else if (quad[i].first == "call"){
+            
+        }
+        else if (quad[i].first == "func"){
+            
+        }
+        else if (quad[i].first == "rtn"){
+            
+        }
+        else if (quad[i].first == "end" && quad[i].second == "func"){
+            
+        }
+        else if (isArithmeticalOperator(quad[i].first)){     //算数运算符号
+            
+        }
+        else if (isLogicalOperator(quad[i].first)){     //逻辑运算符号
+            
+        }
+        else if (quad[i].first == ",") {
+            
+        }
+        else if (quad[i].first == "end" && quad[i].second == "main"){
+            *cursor += "MOV AH,4CH\n";
+            *cursor += "INT 21H\n";
+            *cursor += "CSEG ENDS\n";
+            *cursor += "END MAIN\n";
+        }
+    }
     
     return target;
 }
