@@ -26,8 +26,11 @@ void targetMain(){
     
 }
 
-
-string generate_targer_code(){
+/*生成目标代码
+ 输入：无
+ 输出：无
+ */
+string generateTargetCode(){
     string target = "SSEG SEGMENT STACK\n";
     target += "STK DB 100 DUP (0)\n";
     target += "SSEG END\nDSEG SEGMENT\n";
