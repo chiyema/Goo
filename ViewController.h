@@ -21,10 +21,14 @@
 
 @property (unsafe_unretained) IBOutlet NSTextView *quadView;
 
+@property (unsafe_unretained) IBOutlet NSTextView *targetView;
+
 
 
 - (IBAction)compileProgram:(id)sender;
 
 
 @end
+
+
 

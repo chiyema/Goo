@@ -47,6 +47,12 @@ void morphologyInit() {
     
     errorMessage = "";    //错误信息
     errorLocation = "";   //错误位置
+    
+    targetCode = "";
+    
+    parameter.clear();
+    
+    REG = {"R3", "R2", "R1", "R0"};
 
 }
 
@@ -59,7 +65,7 @@ void morphologyMain(string programString)
 {
     morphologyInit();   //初始化词法分析变量
     getToken(programString);   //生成Token序列
-    fillType();
+    fillType();     //填写符号表和常数表
 }
 
 

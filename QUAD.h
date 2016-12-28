@@ -154,11 +154,18 @@ void doAction(string st1) {
         temp.third = identifier.back();
         identifier.pop_back();
         withend_stack.push_back("func");
+        
+        char end_char = end_number +'0';
+        temp.second = "end";
+        temp.second += end_char;
+        end_number++;
+        end_stack.push_back(temp.second);
+        
         quad.push_back(temp);
     }
     else if (st1 == "rtn"){
         temp.first = "rtn";
-        temp.fourth = identifier.back();
+        temp.third = identifier.back();
         identifier.pop_back();
 
         quad.push_back(temp);
@@ -168,9 +175,13 @@ void doAction(string st1) {
         temp.second = withend_stack.back();
         withend_stack.pop_back();
 
-        if (temp.second == "if" || temp.second == "while") {
+        if (temp.second == "if" || temp.second == "while" || temp.second == "func") {
             temp.third = end_stack.back();
             end_stack.pop_back();
+        }
+        if (temp.second == "while") {
+            temp.fourth = while_stack.back();
+            while_stack.pop_back();
         }
 
         quad.push_back(temp);
@@ -200,7 +211,7 @@ void doAction(string st1) {
         temp.third = "while";
         temp.third += while_char;
         while_number++;
-        while_stack.push_back(temp.fourth);
+        while_stack.push_back(temp.third);
 
         withend_stack.push_back("while");
         quad.push_back(temp);

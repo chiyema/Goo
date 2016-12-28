@@ -51,6 +51,17 @@ typedef struct quadElement {
     string ACT4;    //第四个元素活跃信息
 }quadElement;
 
+/*参数集合的结构体*/
+typedef struct parameterElement {
+    string NAME;
+    vector<string> P;
+}parameterElement;
+
+/*临时变量与寄存器对应关系的结构体*/
+typedef struct projectionElement{
+    string REG;
+    string VAR;
+}projectionElement;
 
 string keyList[7] = {"func","rtn","end","if","else","while","main"};
 string delimiterList[19] = {",",":","=","*","/","+","-",".","(",")","[","]","\"",">","<",">=","<=","==",";"};
@@ -87,6 +98,14 @@ vector<string> while_stack;     //end的栈
 
 string errorMessage;    //错误信息
 string errorLocation;   //错误位置
+
+string targetCode;      //目标代码
+
+vector<parameterElement> parameter;     //参数表
+
+vector<string> REG;     //寄存器
+
+vector<projectionElement> projection;   //临时变量与寄存器对应关系
 
 
 /*判断是不是算数运算符号
@@ -148,7 +167,7 @@ bool isNumber(char ch) {
 
 
 /*判断是不是小数
- 输入：待检测元素（字符）
+ 输入：待检测元素（字符串）
  输出：是否（布尔型）
  */
 bool isDecimal(string st) {
@@ -191,4 +210,36 @@ int isConstant(string st){
         if (st == constl[i]) return i;
     }
     return -1;
+}
+
+/*判断是否是Token元素
+ 输入：待检测元素（字符串）
+ 输出：若是返回编号，不是返回-1（整型）
+ */
+int isToken(string st){
+    for (int i = 0; i < token.size(); i++){
+        if (st == token[i].ORI) return i;
+    }
+    return -1;
+}
+
+
+/*输出错误信息
+ 输入：错误行数（整型），错误类型（字符串）
+ 输出：无
+ */
+void outputCurrentLine (int LINE, string errorType) {
+    if (errorLocation == ""){
+        errorMessage = errorType;
+        errorLocation = "错误位置（第 " + intToString(LINE) +" 行）: ";
+        //        cout << "错误位置（第 " << LINE << " 行）: ";
+        for (int i = 0; i < token.size(); i++) {
+            if (token[i].LINE == LINE) {
+                errorLocation += token[i].ORI + " ";
+                //                cout << token[i].ORI << " ";
+            }
+        }
+        errorLocation += "\n错误信息：";
+        //        cout << endl << "错误信息：";
+    }
 }

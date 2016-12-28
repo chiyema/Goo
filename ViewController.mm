@@ -37,9 +37,7 @@
     
     string tokenString = getTokenResult();
     NSString* tokenNSString = [NSString stringWithUTF8String:tokenString.c_str()];
-    //cout << tokenString;
     _tokenView.string = tokenNSString;
-//    _tokenList. = @"apple";
 
     
     grammarMain();   //文法分析
@@ -54,10 +52,16 @@
 
         quadMain();  //生成四元式
         targetMain();   //生成目标代码
+        
         string quadString = getQuadResult();
         NSString* quadNSString = [NSString stringWithUTF8String:quadString.c_str()];
-        //cout << quadString;
+//        cout << quadString;
         _quadView.string = quadNSString;
+        
+        string targetString = getTargetResult();
+        NSString* targetNSString = [NSString stringWithUTF8String:targetString.c_str()];
+        //cout << targetString;
+        _targetView.string = targetNSString;
     }
     else {
         
@@ -76,6 +80,18 @@
     NSString* symbolNSString = [NSString stringWithUTF8String:symbolString.c_str()];
     //cout << symbolString;
     _symbolView.string = symbolNSString;
+    
+    
+//    NSString *temp = nil;
+//    for(int i =0; i < [tokenNSString length]-1; i++)
+//    {
+//        temp = [tokenNSString substringWithRange:NSMakeRange(i, 1)];
+//        NSLog(@"第%d个字是:%@",i,temp);
+//    }
+//    NSInteger = 0;
+//    [_tokenList insertRowsAtIndexes:[NSIndexSet indexSetWithIndex:test] withAnimation:NSTableViewAnimationEffectGap];
+    
+    
     
     
     

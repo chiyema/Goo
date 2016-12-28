@@ -9,20 +9,6 @@
 
 
 
-void outputCurrentLine (int LINE) {
-    if (errorLocation == ""){
-        errorLocation = "错误位置（第 " + intToString(LINE) +" 行）: ";
-//        cout << "错误位置（第 " << LINE << " 行）: ";
-        for (int i = 0; i < token.size(); i++) {
-            if (token[i].LINE == LINE) {
-                errorLocation += token[i].ORI + " ";
-//                cout << token[i].ORI << " ";
-            }
-        }
-        errorLocation += "\n错误信息：";
-//        cout << endl << "错误信息：";
-    }
-}
 
 /*文法分析主程序
  输入：无
@@ -66,10 +52,9 @@ bool P(int current) {
     else st = "缺少 main";
 
 
-    if (token[current].LINE != token[current-1].LINE) outputCurrentLine(token[current-1].LINE);
-    else outputCurrentLine(token[current].LINE);
+    if (token[current].LINE != token[current-1].LINE) outputCurrentLine(token[current-1].LINE, st);
+    else outputCurrentLine(token[current].LINE, st);
     cout << st << endl;
-    if (errorMessage == "") errorMessage = st + "\n";
     //exit(0);
     return false;
 }
@@ -118,10 +103,9 @@ int F(int current) {
             else st = "缺少 (";
         }
         else st = st + " | current: <" + token[current].ORI + "> , 缺少函数名";
-        if (token[current].LINE != token[current-1].LINE) outputCurrentLine(token[current-1].LINE);
-        else outputCurrentLine(token[current].LINE);
+        if (token[current].LINE != token[current-1].LINE) outputCurrentLine(token[current-1].LINE, st);
+        else outputCurrentLine(token[current].LINE ,st);
         cout << st << endl;
-        if (errorMessage == "") errorMessage = st + "\n";
 //        exit(0);
     }
 
@@ -164,10 +148,9 @@ int C1(int current) {
                 return current;
             }
             else st = "缺少 ;";
-            if (token[current].LINE != token[current-1].LINE) outputCurrentLine(token[current-1].LINE);
-            else outputCurrentLine(token[current].LINE);
+            if (token[current].LINE != token[current-1].LINE) outputCurrentLine(token[current-1].LINE, st);
+            else outputCurrentLine(token[current].LINE, st);
             cout << st << endl;
-            if (errorMessage == "") errorMessage = st + "\n";
 //            exit(0);
             return 0;
         }
@@ -212,21 +195,22 @@ int C1(int current) {
     }
     else if (token[current].FORMNAME != "K" && token[current].FORMNAME != "D" && token[current].FORMNAME != "C") {
         if ((token[current].FORMNAME == "S" && symbol[token[current].No].TYP == "") || token[current].FORMNAME != "S") {
-            outputCurrentLine(token[current].LINE);
+            st = "未定义 " + token[current].ORI;
+            outputCurrentLine(token[current].LINE, st);
             cout << "未定义 " << token[current].ORI << endl;
-            if (errorMessage == "") errorMessage = "未定义 " + token[current].ORI + "\n";
+            
 //            exit(0);
         }
         else if (symbol[token[current].No].CAT == "p"){
-            outputCurrentLine(token[current].LINE);
+            st = "没有保存函数返回值";
+            outputCurrentLine(token[current].LINE, st);
             cout << "没有保存函数返回值"<< endl;
-            if (errorMessage == "") errorMessage = "没有保存函数返回值\n";
 //            exit(0);
         }
         else {
-            outputCurrentLine(token[current].LINE);
+            st = "未进行任何操作";
+            outputCurrentLine(token[current].LINE, st);
             cout << "未进行任何操作"<< endl;
-            if (errorMessage == "") errorMessage = "未进行任何操作\n";
 //            exit(0);
         }
     }
@@ -294,10 +278,9 @@ int I(int current) {
             }
         }
         else st = "缺少 (";
-        if (token[current].LINE != token[current-1].LINE) outputCurrentLine(token[current-1].LINE);
-        else outputCurrentLine(token[current].LINE);
+        if (token[current].LINE != token[current-1].LINE) outputCurrentLine(token[current-1].LINE ,st);
+        else outputCurrentLine(token[current].LINE, st);
         cout << st << endl;
-        if (errorMessage == "") errorMessage = st + "\n";
 //        exit(0);
 
     }
@@ -333,10 +316,9 @@ int W(int current) {
         }
         else st = "缺少 (";
 
-        if (token[current].LINE != token[current-1].LINE) outputCurrentLine(token[current-1].LINE);
-        else outputCurrentLine(token[current].LINE);
+        if (token[current].LINE != token[current-1].LINE) outputCurrentLine(token[current-1].LINE, st);
+        else outputCurrentLine(token[current].LINE, st);
         cout << st << endl;
-        if (errorMessage == "") errorMessage = st + "\n";
 //        exit(0);
     }
 
@@ -405,10 +387,9 @@ int E(int current) {
                 }
             }
             else st = "缺少函数参数";
-            if (token[current].LINE != token[current-1].LINE) outputCurrentLine(token[current-1].LINE);
-            else outputCurrentLine(token[current].LINE);
+            if (token[current].LINE != token[current-1].LINE) outputCurrentLine(token[current-1].LINE, st);
+            else outputCurrentLine(token[current].LINE, st);
             cout << st << endl;
-            if (errorMessage == "") errorMessage = st + "\n";
 //            exit(0);
         }
         current--;
@@ -469,9 +450,9 @@ int T(int current) {
     }
     else  st = "缺少变量、常量或常数";
 
-    outputCurrentLine(token[current].LINE);
+    if (token[current].LINE != token[current-1].LINE) outputCurrentLine(token[current-1].LINE, st);
+    else outputCurrentLine(token[current].LINE, st);
     cout << st << endl;
-    if (errorMessage == "") errorMessage = st + "\n";
 //    exit(0);
     return 0;
 }
@@ -498,9 +479,10 @@ int T1(int current) {
         return current;
     }
 
-    outputCurrentLine(token[current].LINE);
+    if (token[current].LINE != token[current-1].LINE) outputCurrentLine(token[current-1].LINE, st);
+    else outputCurrentLine(token[current].LINE, st);
+    
     cout << st << endl;
-    if (errorMessage == "") errorMessage = st + "\n";
 //    exit(0);
     return 0;
 }
@@ -533,16 +515,15 @@ int D(int current) {
             }
             else st = "缺少 )";
         }
-        outputCurrentLine(token[current].LINE);
+        outputCurrentLine(token[current].LINE, st);
         cout << st << endl;
-        if (errorMessage == "") errorMessage = st + "\n";
 //        exit(0);
     }
 
     if (token[current].FORMNAME != "K" && token[current].FORMNAME != "D" && token[current].FORMNAME != "C") {
-        outputCurrentLine(token[current].LINE );
+        st = "未定义 " + token[current].ORI;
+        outputCurrentLine(token[current].LINE, st);
         cout << "未定义 " << token[current].ORI<< endl;
-        if (errorMessage == "") errorMessage = "未定义 " + token[current].ORI + "\n";
 //        exit(0);
     }
     return 0;
@@ -573,9 +554,8 @@ int D1(int current) {
 
 
 
-    outputCurrentLine(token[current].LINE);
+    outputCurrentLine(token[current].LINE ,st);
     cout << st << endl;
-    if (errorMessage == "") errorMessage = st + "\n";
 //    exit(0);
     return 0;
 }
@@ -598,9 +578,8 @@ int I1(int current) {
         else st = "缺少逻辑符号";
     }
 
-    outputCurrentLine(token[current].LINE);
+    outputCurrentLine(token[current].LINE, st);
     cout << st << endl;
-    if (errorMessage == "") errorMessage = st + "\n";
 //    exit(0);
     return 0;
 }

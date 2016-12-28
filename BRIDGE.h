@@ -73,3 +73,12 @@ string getErrorResult(){
     }
     return temp;
 }
+
+/*获取目标代码
+ 输入：无
+ 输出：目标代码（字符串）
+ */
+string getTargetResult(){
+    return targetCode;
+}
+
