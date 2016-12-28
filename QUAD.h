@@ -7,7 +7,7 @@
 
 #endif //GOO_FOUR_ELEMENT_TYPE_H
 
-
+vector<int> quadLine;
 
 /*生成四元式主程序
  输入：无
@@ -16,7 +16,7 @@
 void quadMain(){
     action.push_back("#");
     int i = 0;
-    while (i < token.size()){
+    while (i < token.size() - 1){
 
         //cout << token[i].ori<< endl;
         if (token[i].ORI == ";" && (action.back() == "=" || action.back() == "#") && identifier.size()>0){      //针对函数调用特殊写的
@@ -43,6 +43,7 @@ void quadMain(){
             }
             else {
                 action.push_back(token[i].ORI);
+                quadLine.push_back(token[i].LINE);
                 i++;
             }
         }
@@ -54,7 +55,35 @@ void quadMain(){
     }
 
     doAction(action.back());
-    //outputResult();
+    
+    if (errorMessage == ""){
+        vector<quadElement>::iterator it;
+        for (it = quad.begin(); it != quad.end(); it++){
+            if ((*it).first == "=") {
+                if (isSymbol((*it).fourth) == -1) outputCurrentLine((*it).LINE, "常数无法被赋值");
+                else if (isSymbol((*it).second) != -1) {
+                    if (symbol[isSymbol((*it).fourth)].TYP == "bool"){
+                        if (whatsTheType((*it).second) == "int") outputCurrentLine((*it).LINE, "类型冲突，整型->布尔型");
+                        else if (whatsTheType((*it).second) == "real") outputCurrentLine((*it).LINE, "类型冲突，实型变->布尔型");
+                    }
+                    else if (whatsTheType((*it).fourth) == "int"){
+                        if (whatsTheType((*it).second) == "real") outputCurrentLine((*it).LINE, "类型冲突，实型->整型");
+                    }
+                    else if (whatsTheType((*it).fourth) == "const") outputCurrentLine((*it).LINE, "常量无法被再次赋值");
+                }
+                else if (whatsTheType((*it).fourth) == "const") outputCurrentLine((*it).LINE, "常量无法被再次赋值");
+                else if (whatsTheType((*it).second) == "real" && symbol[isSymbol((*it).fourth)].TYP == "int") outputCurrentLine((*it).LINE, "类型冲突，实型->整型");
+                else if (whatsTheType((*it).second) == "real" && symbol[isSymbol((*it).fourth)].TYP == "bool") outputCurrentLine((*it).LINE, "类型冲突，实型->布尔型");
+                else if (whatsTheType((*it).second) == "int" && symbol[isSymbol((*it).fourth)].TYP == "bool") outputCurrentLine((*it).LINE, "类型冲突，整型->布尔型");
+            }
+            else if ((*it).first == ":") {
+                if (isSymbol((*it).fourth) == -1) outputCurrentLine((*it).LINE, "常数无法被赋值");
+                else if (whatsTheType((*it).fourth) != "const") outputCurrentLine((*it).LINE, "该类型变量无法做：运算");
+            }
+        }
+    }
+    
+    if (errorMessage == "") targetMain();
 }
 
 
@@ -149,6 +178,7 @@ void doAction(string st1) {
     quadElement temp;
     if (st1 == "func") {
         temp.first = "func";
+        temp.LINE = quadLine.back();
         temp.fourth = identifier.back();
         identifier.pop_back();
         temp.third = identifier.back();
@@ -165,6 +195,7 @@ void doAction(string st1) {
     }
     else if (st1 == "rtn"){
         temp.first = "rtn";
+        temp.LINE = quadLine.back();
         temp.third = identifier.back();
         identifier.pop_back();
 
@@ -172,6 +203,7 @@ void doAction(string st1) {
     }
     else if (st1 == "end"){
         temp.first = "end";
+        temp.LINE = quadLine.back();
         temp.second = withend_stack.back();
         withend_stack.pop_back();
 
@@ -189,11 +221,13 @@ void doAction(string st1) {
     }
     else if (st1 == "if"){
         temp.first = "if";
+        temp.LINE = quadLine.back();
         quad.push_back(temp);
         withend_stack.push_back("if");
     }
     else if (st1 == "else"){
         temp.first = "else";
+        temp.LINE = quadLine.back();
         temp.third = else_stack.back();
         else_stack.pop_back();
 
@@ -207,6 +241,7 @@ void doAction(string st1) {
     }
     else if (st1 == "while"){
         temp.first = "while";
+        temp.LINE = quadLine.back();
         char while_char = while_number +'0';
         temp.third = "while";
         temp.third += while_char;
@@ -218,12 +253,14 @@ void doAction(string st1) {
     }
     else if (st1 == "main"){
         temp.first = "main";
+        temp.LINE = quadLine.back();
         withend_stack.push_back("main");
 
         quad.push_back(temp);
     }
     else if (st1 == ","){
         temp.first = ",";
+        temp.LINE = quadLine.back();
         temp.third = identifier.back();
         identifier.pop_back();
         temp.second = identifier.back();
@@ -238,6 +275,7 @@ void doAction(string st1) {
     }
     else if (st1 == ":"){
         temp.first = ":";
+        temp.LINE = quadLine.back();
         temp.second = identifier.back();
         identifier.pop_back();
         temp.fourth = identifier.back();
@@ -246,6 +284,7 @@ void doAction(string st1) {
     }
     else if (st1 == "="){
         temp.first = "=";
+        temp.LINE = quadLine.back();
         temp.second = identifier.back();
         identifier.pop_back();
         temp.fourth = identifier.back();
@@ -258,12 +297,13 @@ void doAction(string st1) {
         tempSE.ORI = 0;
         
         temp.first = st1;
+        temp.LINE = quadLine.back();
         temp.third = identifier.back();
         identifier.pop_back();
         temp.second = identifier.back();
         identifier.pop_back();
         
-        if (symbol[isSymbol(temp.third)].TYP == "real" || symbol[isSymbol(temp.second)].TYP == "real") tempSE.TYP = "real";
+        if (whatsTheType(temp.third) == "real" || whatsTheType(temp.second) == "real") tempSE.TYP = "real";
         else tempSE.TYP = "int";
 
         char t_char = t_number +'0';
@@ -295,6 +335,7 @@ void doAction(string st1) {
     }
     else if (st1 == ">" || st1 == "<" ||st1 == ">=" || st1 == "<=" || st1 == ";") {
         temp.first = st1;
+        temp.LINE = quadLine.back();
         temp.third = identifier.back();
         identifier.pop_back();
         temp.second = identifier.back();
@@ -321,9 +362,11 @@ void doAction(string st1) {
     }
     else if (st1 == ";"){
         action.pop_back();
+        quadLine.pop_back();
     }
 
     action.pop_back();
+    quadLine.pop_back();
     return;
 }
 

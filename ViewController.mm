@@ -13,10 +13,39 @@
 #include "BRIDGE.h"
 
 
+//void display(){
+//    string tokenString = getTokenResult();
+//    NSString* tokenNSString = [NSString stringWithUTF8String:tokenString.c_str()];
+//    _tokenView.string = tokenNSString;
+//    
+//    string symbolString = getSymbolResult();
+//    NSString* symbolNSString = [NSString stringWithUTF8String:symbolString.c_str()];
+//    _symbolView.string = symbolNSString;
+//    
+//    string quadString = getQuadResult();
+//    NSString* quadNSString = [NSString stringWithUTF8String:quadString.c_str()];
+//    _quadView.string = quadNSString;
+//    
+//    string targetString = getTargetResult();
+//    NSString* targetNSString = [NSString stringWithUTF8String:targetString.c_str()];
+//    _targetView.string = targetNSString;
+//}
+//
+//void popup(NSString st){
+//    NSAlert *alert = [[NSAlert alloc] init];
+//    [alert setMessageText:st];
+//    [alert runModal];
+//    _tokenView.string = @"Token";
+//    _symbolView.string = @"Symbol";
+//    _quadView.string = @"Quad";
+//    _targetView.string = @"Target";
+//}
+
+
+
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    _programView.accessibilityPlaceholderValue = @"在这里输入程序";
 
     // Do any additional setup after loading the view.
 }
@@ -31,69 +60,65 @@
 
 - (IBAction)compileProgram:(id)sender {
     NSString* programNSString = _programView.string;
-    const char* programString = [programNSString UTF8String];
+    const char* programChar = [programNSString UTF8String];
+    string programString = programChar;
+    programString += "\n";
     
     morphologyMain(programString);   //词法分析
     
-    string tokenString = getTokenResult();
-    NSString* tokenNSString = [NSString stringWithUTF8String:tokenString.c_str()];
-    _tokenView.string = tokenNSString;
-
-    
-    grammarMain();   //文法分析
-    
     string compileString = getErrorResult();
-    
-    
+        
+        
     if (compileString == "") {
         NSAlert *alert = [[NSAlert alloc] init];
-        [alert setMessageText:@"编译成功"];
+        [alert setMessageText:@"编译通过!"];
         [alert runModal];
-
-        quadMain();  //生成四元式
-        targetMain();   //生成目标代码
+        
+        string tokenString = getTokenResult();
+        NSString* tokenNSString = [NSString stringWithUTF8String:tokenString.c_str()];
+        _tokenView.string = tokenNSString;
+        
+        string symbolString = getSymbolResult();
+        NSString* symbolNSString = [NSString stringWithUTF8String:symbolString.c_str()];
+        _symbolView.string = symbolNSString;
         
         string quadString = getQuadResult();
         NSString* quadNSString = [NSString stringWithUTF8String:quadString.c_str()];
-//        cout << quadString;
         _quadView.string = quadNSString;
         
         string targetString = getTargetResult();
         NSString* targetNSString = [NSString stringWithUTF8String:targetString.c_str()];
-        //cout << targetString;
         _targetView.string = targetNSString;
+        
     }
     else {
-        
-        
         NSString* compileNSString = [NSString stringWithUTF8String:compileString.c_str()];
-        //cout << compileString;
-        
         NSAlert *alert = [[NSAlert alloc] init];
         [alert setMessageText:compileNSString];
         [alert runModal];
+        _tokenView.string = @"Token";
+        _symbolView.string = @"Symbol";
+        _quadView.string = @"Quad";
+        _targetView.string = @"Target";
         
-        _quadView.string = @"";
+        string tokenString = getTokenResult();
+        NSString* tokenNSString = [NSString stringWithUTF8String:tokenString.c_str()];
+        _tokenView.string = tokenNSString;
+        
+        string symbolString = getSymbolResult();
+        NSString* symbolNSString = [NSString stringWithUTF8String:symbolString.c_str()];
+        _symbolView.string = symbolNSString;
+        
+        string quadString = getQuadResult();
+        NSString* quadNSString = [NSString stringWithUTF8String:quadString.c_str()];
+        _quadView.string = quadNSString;
+        
+        string targetString = getTargetResult();
+        NSString* targetNSString = [NSString stringWithUTF8String:targetString.c_str()];
+        _targetView.string = targetNSString;
     }
-    
-    string symbolString = getSymbolResult();
-    NSString* symbolNSString = [NSString stringWithUTF8String:symbolString.c_str()];
-    //cout << symbolString;
-    _symbolView.string = symbolNSString;
-    
-    
-//    NSString *temp = nil;
-//    for(int i =0; i < [tokenNSString length]-1; i++)
-//    {
-//        temp = [tokenNSString substringWithRange:NSMakeRange(i, 1)];
-//        NSLog(@"第%d个字是:%@",i,temp);
-//    }
-//    NSInteger = 0;
-//    [_tokenList insertRowsAtIndexes:[NSIndexSet indexSetWithIndex:test] withAnimation:NSTableViewAnimationEffectGap];
-    
-    
-    
-    
-    
 }
 @end
+
+
+

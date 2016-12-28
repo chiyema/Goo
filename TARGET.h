@@ -91,7 +91,7 @@ void generateTargetCode(){
     for (int i = 0; i < quad.size(); i++) {
         
         if (quad[i].first == "main") {
-            targetCode += "main:\n";
+            targetCode += "MAIN:\n";
         }
         else if ((quad[i].first == "=" && quad[i].second != "res")|| quad[i].first == ":"){
             targetCode += "MOV @" + quad[i].fourth + ", ";

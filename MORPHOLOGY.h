@@ -65,7 +65,12 @@ void morphologyMain(string programString)
 {
     morphologyInit();   //初始化词法分析变量
     getToken(programString);   //生成Token序列
-    fillType();     //填写符号表和常数表
+    
+    if (token.size() == 1 ) outputCurrentLine(-1, "请输入程序");
+    else {
+        fillType();     //填写符号表和常数表
+        grammarMain();
+    }
 }
 
 
@@ -83,8 +88,11 @@ int getToken(string programString)
     //fp=fopen(file_location,"r");
 
     token.clear();
+    char lastChar = 'a';
     while (programString[i]!='\0')
     {
+        if (programString[i] == '\n' && (lastChar == '\n' || lastChar == '\t' || lastChar == '\r' || lastChar == ' ')) currentLine++;
+        lastChar = programString[i];
         state_before=state;
         state=stateChange(state,programString[i]);
         //cout<<programString[i]<<" "<<state_before<<" "<<state<<endl;
@@ -108,7 +116,12 @@ int getToken(string programString)
             state=1;
         }
         i++;
+        
     }
+    
+    
+    tokenElement tempTE;
+    token.push_back(tempTE);
     return 0;
 }
 
@@ -124,7 +137,6 @@ int stateChange(int state, char ch)
     //end_state==0时，代表空白符读入完毕
     //end_state==-1时，代表一个元素读入完毕
     //end_state==-2时，代表错误
-    if (ch == '\n')  currentLine++;     //当前行数加1
     int end_state=0;
     if (state==1)
     {
@@ -234,7 +246,6 @@ int stateChange(int state, char ch)
 tokenElement searchElement(char* tempString)
 {
     string temp = tempString;
-
     if (isNumber(temp[0]) || temp == "true" || temp == "false"){
         for (int i = 2; i < constl.size(); i++) {  //判断是不是常数表中出现过的
             if (constl[i] == tempString) {
@@ -298,7 +309,7 @@ tokenElement searchElement(char* tempString)
  输出：无
  */
 void fillType() {
-    for (int i =0; i < token.size(); i++) {
+    for (int i =0; i < token.size() - 1; i++) {
         if (token[i].FORMNAME == "S") {    //是不是符号／标识符
             if (symbol[token[i].No].TYP == "") {    //是不是没有设置过类型
                 if (token[i+1].ORI == ":") {                //常量类型
@@ -316,13 +327,13 @@ void fillType() {
         }
     }
 
-    for (int i =0; i < token.size(); i++) {
+    for (int i =0; i < token.size() - 1; i++) {
         if (token[i].FORMNAME == "S") {    //是不是符号／标识符
             if (token[i+1].ORI == "(" && token[i-1].ORI == "func") {           //函数类型
 //                if (symbol[token[i].No].TYP == "") {    //是不是没有设置过类型
                     symbol[token[i].No].CAT = "p";
                     int j = i;
-                    while (token[j].ORI != "rtn" && j < token.size()) j++;
+                    while (token[j].ORI != "rtn" && j < token.size() - 1) j++;
                     if (token[j].ORI == "rtn")symbol[token[i].No].TYP = symbol[token[j+1].No].TYP;
                 }
                 else if (token[i+1].ORI == "("){                              //形参类型设置

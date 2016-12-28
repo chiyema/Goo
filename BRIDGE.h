@@ -25,9 +25,14 @@
  */
 string getTokenResult() {
     string temp;
-    for (int i = 0; i < token.size(); i++) {
-        temp += "<" + token[i].ORI + "> ";
-        temp += "<" + token[i].FORMNAME + "," + intToString(token[i].No) + "," + intToString(token[i].LINE) + ">\n";
+    int format = 15;
+    for (int i = 0; i < token.size() - 1; i++) {
+        string st = "<" + token[i].ORI + ">";
+        temp += st;
+        for (int j = (int)st.length(); j <= format; j ++) {
+            temp += " ";
+        }
+        temp += "<" + token[i].FORMNAME + "," + intToString(token[i].No) + ">\n";
     }
     
     return temp;
@@ -40,9 +45,24 @@ string getTokenResult() {
  */
 string getSymbolResult() {
     string temp;
-    
+    int format = 20;
     for (int i = 0; i < symbol.size(); i++) {
-        temp += intToString(i) + "  " + symbol[i].NAME + "  " + symbol[i].TYP + "  " + symbol[i].CAT  + "  " + intToString(symbol[i].ORI) + "\n";
+        string st = intToString(i);
+        temp += st;
+        for (int i = (int)st.length(); i < format; i ++) temp += " ";
+        
+        st = symbol[i].NAME;
+        temp += st;
+        for (int i = (int)st.length(); i < format; i ++) temp += " ";
+        
+        st = symbol[i].TYP;
+        temp += st;
+        for (int i = (int)st.length(); i < format; i ++) temp += " ";
+        
+        st = symbol[i].CAT;
+        temp += st;
+        for (int i = (int)st.length(); i < format; i ++) temp += " ";
+        temp += "\n";
     }
     
     return temp;
@@ -55,11 +75,32 @@ string getSymbolResult() {
  */
 string getQuadResult(){
     string temp;
+    int format = 10;
     for (int i = 0; i < quad.size(); i++){
-        temp += "(" + quad[i].first + "," + quad[i].second + "," + quad[i].third + "," + quad[i].fourth + "," + intToString(quad[i].part) + "," + quad[i].ACT1 + "," + quad[i].ACT2 + "," + quad[i].ACT3 + "," + quad[i].ACT4 + ")\n";
+        temp += "( ";
+        string st;
+        
+        st = quad[i].first;
+        temp += st;
+        for (int i = (int)st.length(); i < format; i ++) temp += " ";
+
+        st = quad[i].second;
+        temp += st;
+        for (int i = (int)st.length(); i < format; i ++) temp += " ";
+        
+        st = quad[i].third;
+        temp += st;
+        for (int i = (int)st.length(); i < format; i ++) temp += " ";
+        
+        st = quad[i].fourth;
+        temp += st;
+        for (int i = (int)st.length(); i < format; i ++) temp += " ";
+        
+        temp += ")\n";
     }
     return temp;
 }
+
 
 
 /*获取错误信息

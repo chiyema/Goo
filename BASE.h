@@ -49,6 +49,7 @@ typedef struct quadElement {
     string ACT2;    //第二个元素活跃信息
     string ACT3;    //第三个元素活跃信息
     string ACT4;    //第四个元素活跃信息
+    int LINE;
 }quadElement;
 
 /*参数集合的结构体*/
@@ -183,7 +184,8 @@ bool isDecimal(string st) {
  输出：类型（字符串）
  */
 string whatsTheType(string st) {
-    if (st == "true" || st == "false") return "bool";
+    if (isSymbol(st) != -1) return symbol[isSymbol(st)].TYP;
+    else if (st == "true" || st == "false") return "bool";
     else if (isDecimal(st)) return "real";
     else return "int";
 }
@@ -229,17 +231,23 @@ int isToken(string st){
  输出：无
  */
 void outputCurrentLine (int LINE, string errorType) {
-    if (errorLocation == ""){
-        errorMessage = errorType;
-        errorLocation = "错误位置（第 " + intToString(LINE) +" 行）: ";
-        //        cout << "错误位置（第 " << LINE << " 行）: ";
-        for (int i = 0; i < token.size(); i++) {
-            if (token[i].LINE == LINE) {
-                errorLocation += token[i].ORI + " ";
-                //                cout << token[i].ORI << " ";
-            }
+    if (errorMessage == ""){
+        if (LINE == -1) {
+            errorLocation = "";
+            errorMessage = "错误信息：" + errorType;
         }
-        errorLocation += "\n错误信息：";
-        //        cout << endl << "错误信息：";
+        else {
+            errorMessage = "\n错误信息：" + errorType;
+            errorLocation = "错误位置（第 " + intToString(LINE) +" 行）: ";
+            //        cout << "错误位置（第 " << LINE << " 行）: ";
+            for (int i = 0; i < token.size(); i++) {
+                if (token[i].LINE == LINE) {
+                    errorLocation += token[i].ORI + " ";
+                    //                cout << token[i].ORI << " ";
+                }
+            }
+            //        cout << endl << "错误信息：";
+        }
+
     }
 }

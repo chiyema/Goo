@@ -21,6 +21,8 @@ void grammarMain(){
     //cout << "开始进行语法分析..." << endl;
     //if (P(0)) cout << "语法符合!" << endl;
     //else cout << "语法不符合！" << endl;
+    
+    if (errorMessage == "") quadMain();
 }
 
 
@@ -52,14 +54,15 @@ bool P(int current) {
     else st = "缺少 main";
 
 
-    if (token[current].LINE != token[current-1].LINE) outputCurrentLine(token[current-1].LINE, st);
+    if (token[current].LINE != token[current-1].LINE && token[current].LINE != 1) outputCurrentLine(token[current-1].LINE, st);
     else outputCurrentLine(token[current].LINE, st);
-    cout << st << endl;
+//    cout << st << endl;
     //exit(0);
     return false;
 }
 
 int F(int current) {
+    if (current >= token.size()  - 1) return 0;
 //    cout << "从" << token[current].ORI << "开始匹配F" << endl;
     string st = "F->func S ( V ) C rtn E ; end";
     if (token[current].ORI == "func"){
@@ -105,7 +108,7 @@ int F(int current) {
         else st = st + " | current: <" + token[current].ORI + "> , 缺少函数名";
         if (token[current].LINE != token[current-1].LINE) outputCurrentLine(token[current-1].LINE, st);
         else outputCurrentLine(token[current].LINE ,st);
-        cout << st << endl;
+//        cout << st << endl;
 //        exit(0);
     }
 
@@ -113,6 +116,8 @@ int F(int current) {
 }
 
 int C(int current) {
+    if (current >= token.size()  - 1) return current;
+
 //    cout << "从" << token[current].ORI << "开始匹配C" << endl;
     string st = "C->C' C";
     int temp = C1(current);
@@ -134,9 +139,13 @@ int C(int current) {
 }
 
 int C1(int current) {
+    if (current >= token.size()  - 1) return 0;
+
 //    cout << "从" << token[current].ORI << "开始匹配C'" << endl;
     string st;
-    if (token[current].FORMNAME == "S") {
+    int temp = D(current);
+    if (temp) {
+    //if (token[current].FORMNAME == "S") {
         st = "C'->S A ;";
         current++;
         int temp = A(current);
@@ -150,14 +159,14 @@ int C1(int current) {
             else st = "缺少 ;";
             if (token[current].LINE != token[current-1].LINE) outputCurrentLine(token[current-1].LINE, st);
             else outputCurrentLine(token[current].LINE, st);
-            cout << st << endl;
+//            cout << st << endl;
 //            exit(0);
             return 0;
         }
         current--;
     }
 
-    int temp = I(current);
+    temp = I(current);
     if (temp) {
         st = "C'->I";
         current = temp;
@@ -190,7 +199,7 @@ int C1(int current) {
         return current;
     }
 
-    if (current == token.size()) {
+    if (current == token.size()  - 1) {
 
     }
     else if (token[current].FORMNAME != "K" && token[current].FORMNAME != "D" && token[current].FORMNAME != "C") {
@@ -208,9 +217,9 @@ int C1(int current) {
 //            exit(0);
         }
         else {
-            st = "未进行任何操作";
+            st = "缺少算数运算符号";
             outputCurrentLine(token[current].LINE, st);
-            cout << "未进行任何操作"<< endl;
+            cout << "缺少算数运算符号"<< endl;
 //            exit(0);
         }
     }
@@ -218,6 +227,8 @@ int C1(int current) {
 }
 
 int A(int current) {
+    if (current >= token.size()  - 1) return 0;
+
 //    cout << "从" << token[current].ORI << "开始匹配A" << endl;
     string st;
 
@@ -247,6 +258,8 @@ int A(int current) {
 }
 
 int I(int current) {
+    if (current >= token.size()  - 1) return 0;
+
 //    cout << "从" << token[current].ORI << "开始匹配I" << endl;
     string st = "I->if ( I' ) C else C end";
     if (token[current].ORI == "if"){
@@ -280,7 +293,7 @@ int I(int current) {
         else st = "缺少 (";
         if (token[current].LINE != token[current-1].LINE) outputCurrentLine(token[current-1].LINE ,st);
         else outputCurrentLine(token[current].LINE, st);
-        cout << st << endl;
+//        cout << st << endl;
 //        exit(0);
 
     }
@@ -289,6 +302,8 @@ int I(int current) {
 }
 
 int W(int current) {
+    if (current >= token.size()  - 1) return 0;
+
 //    cout << "从" << token[current].ORI << "开始匹配W" << endl;
     string st = "W->while ( I' ) C end";
     if (token[current].ORI == "while"){
@@ -318,7 +333,7 @@ int W(int current) {
 
         if (token[current].LINE != token[current-1].LINE) outputCurrentLine(token[current-1].LINE, st);
         else outputCurrentLine(token[current].LINE, st);
-        cout << st << endl;
+//        cout << st << endl;
 //        exit(0);
     }
 
@@ -326,6 +341,8 @@ int W(int current) {
 }
 
 int V(int current) {
+    if (current >= token.size()  - 1) return 0;
+
 //    cout << "从" << token[current].ORI << "开始匹配V" << endl;
     string st = "V->S V'";
     if (token[current].FORMNAME == "S") {
@@ -342,6 +359,8 @@ int V(int current) {
 }
 
 int V1(int current) {
+    if (current >= token.size()  - 1) return current;
+
 //    cout << "从" << token[current].ORI << "开始匹配V'" << endl;
     string st = "V'->, S V'";
     if (token[current].ORI == ","){
@@ -364,6 +383,8 @@ int V1(int current) {
 }
 
 int E(int current) {
+    if (current >= token.size()  - 1) return 0;
+
 //    cout << "从" << token[current].ORI << "开始匹配E" << endl;
     string st;
 
@@ -389,7 +410,7 @@ int E(int current) {
             else st = "缺少函数参数";
             if (token[current].LINE != token[current-1].LINE) outputCurrentLine(token[current-1].LINE, st);
             else outputCurrentLine(token[current].LINE, st);
-            cout << st << endl;
+//            cout << st << endl;
 //            exit(0);
         }
         current--;
@@ -412,6 +433,8 @@ int E(int current) {
 }
 
 int E1(int current) {
+    if (current >= token.size()  - 1) return current;
+
 //    cout << "从" << token[current].ORI << "开始匹配E'" << endl;
     string st = "E'->W T E'";
     if (token[current].ORI == "+" || token[current].ORI == "-"){
@@ -436,6 +459,8 @@ int E1(int current) {
 }
 
 int T(int current) {
+    if (current >= token.size()  - 1) return 0;
+
 //    cout << "从" << token[current].ORI << "开始匹配T" << endl;
     string st = "T->D T'";
     int temp = D(current);
@@ -452,12 +477,14 @@ int T(int current) {
 
     if (token[current].LINE != token[current-1].LINE) outputCurrentLine(token[current-1].LINE, st);
     else outputCurrentLine(token[current].LINE, st);
-    cout << st << endl;
+//    cout << st << endl;
 //    exit(0);
     return 0;
 }
 
 int T1(int current) {
+    if (current >= token.size()  - 1) return current;
+
 //    cout << "从" << token[current].ORI << "开始匹配T'" << endl;
     string st = "T'->V D T'";
     if (token[current].ORI == "*" || token[current].ORI == "/"){
@@ -482,12 +509,14 @@ int T1(int current) {
     if (token[current].LINE != token[current-1].LINE) outputCurrentLine(token[current-1].LINE, st);
     else outputCurrentLine(token[current].LINE, st);
     
-    cout << st << endl;
+//    cout << st << endl;
 //    exit(0);
     return 0;
 }
 
 int D(int current) {
+    if (current >= token.size()  - 1) return 0;
+
 //    cout << "从" << token[current].ORI << "开始匹配D" << endl;
     string st;
     if (token[current].FORMNAME == "S" && symbol[token[current].No].CAT != ""){
@@ -516,7 +545,7 @@ int D(int current) {
             else st = "缺少 )";
         }
         outputCurrentLine(token[current].LINE, st);
-        cout << st << endl;
+//        cout << st << endl;
 //        exit(0);
     }
 
@@ -530,6 +559,8 @@ int D(int current) {
 }
 
 int D1(int current) {
+    if (current >= token.size()  - 1) return current;
+
 //    cout << "从" << token[current].ORI << "开始匹配D'" << endl;
     string st = "D'->, D D'";
     if (token[current].ORI == ","){
@@ -555,12 +586,14 @@ int D1(int current) {
 
 
     outputCurrentLine(token[current].LINE ,st);
-    cout << st << endl;
+//    cout << st << endl;
 //    exit(0);
     return 0;
 }
 
 int I1(int current) {
+    if (current >= token.size()  - 1) return 0;
+
 //    cout << "从" << token[current].ORI << "开始匹配I'" << endl;
     string st = "I'->E L E";
     int temp = E(current);
@@ -575,11 +608,11 @@ int I1(int current) {
                 return current;
             }
         }
-        else st = "缺少逻辑符号";
+        else st = "缺少逻辑运算符号";
     }
 
     outputCurrentLine(token[current].LINE, st);
-    cout << st << endl;
+//    cout << st << endl;
 //    exit(0);
     return 0;
 }
