@@ -14,7 +14,7 @@
  输入：无
  输出：无
  */
-void grammarMain(){
+void grammarMain(bool optim){
     errorLocation = "";
     errorMessage = "";
     P(0);
@@ -22,7 +22,7 @@ void grammarMain(){
     //if (P(0)) cout << "语法符合!" << endl;
     //else cout << "语法不符合！" << endl;
     
-    if (errorMessage == "") quadMain();
+    if (errorMessage == "") quadMain(optim);
 }
 
 

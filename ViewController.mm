@@ -34,9 +34,11 @@
     string programString = programChar;
     programString += "\n";
     
-//    if ([_doesOptim state] == NSOnState) _programView.string = @"enabled";
-//    else _programView.string = @"unabled";
-    morphologyMain(programString);   //词法分析
+    bool optimization;
+    if ([_doesOptim state] == NSOnState) optimization = true;
+    else optimization = false;
+    
+    morphologyMain(programString, optimization);   //词法分析
 
     string compileString = getErrorResult();
         

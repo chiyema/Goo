@@ -13,7 +13,7 @@ vector<int> quadLine;
  输入：无
  输出：无
  */
-void quadMain(){
+void quadMain(bool optim){
     action.push_back("#");
     int i = 0;
     while (i < token.size() - 1){
@@ -83,7 +83,10 @@ void quadMain(){
         }
     }
     
-    if (errorMessage == "") optimMain();
+    if (errorMessage == "") {
+        if(optim) optimMain();
+        targetMain();
+    }
 }
 
 

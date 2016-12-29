@@ -98,7 +98,6 @@ string getQuadResult(){
         
         st = quad[i].fourth;
         temp += st;
-        for (int i = (int)st.length(); i < format; i ++) temp += " ";
         
         temp += ")\n";
     }

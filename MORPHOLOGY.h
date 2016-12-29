@@ -61,7 +61,7 @@ void morphologyInit() {
  输入：无
  输出：无
  */
-void morphologyMain(string programString)
+void morphologyMain(string programString ,bool optim)
 {
     morphologyInit();   //初始化词法分析变量
     getToken(programString);   //生成Token序列
@@ -69,7 +69,7 @@ void morphologyMain(string programString)
     if (token.size() == 1 ) outputCurrentLine(-1, "请输入程序");
     else {
         fillType();     //填写符号表和常数表
-        grammarMain();
+        grammarMain(optim);
     }
 }
 
