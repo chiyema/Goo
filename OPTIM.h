@@ -13,7 +13,10 @@
 #endif /* OPTIM_h */
 
 
-
+/*优化代码主程序
+ 输入：无
+ 输出：无
+ */
 void optimMain(){
     ridStep();
     ridConstant();
@@ -21,6 +24,11 @@ void optimMain(){
     ridUnused();
     ridWhile();
 }
+
+/*优化代码（去除一步临时变量）
+ 输入：无
+ 输出：无
+ */
 void ridStep() {
     vector<quadElement>::iterator it1;
     vector<vector<quadElement>::iterator> toBeDeleted;
@@ -41,6 +49,10 @@ void ridStep() {
     }
 }
 
+/*优化代码（去除常数表达式）
+ 输入：无
+ 输出：无
+ */
 void ridConstant(){
     vector<quadElement>::iterator it;
     vector<vector<quadElement>::iterator> toBeDeleted;
@@ -87,6 +99,10 @@ void ridConstant(){
     
 }
 
+/*优化代码（去除重复表达式）
+ 输入：无
+ 输出：无
+ */
 void ridRepeat(){
     vector<quadElement>::iterator it1;
     vector<quadElement>::iterator it2;
@@ -118,6 +134,10 @@ void ridRepeat(){
     }
 }
 
+/*优化代码（去除未使用就重新赋值的变量）
+ 输入：无
+ 输出：无
+ */
 void ridUnused() {
     vector<quadElement>::iterator it1;
     vector<quadElement>::iterator it2;
@@ -160,6 +180,10 @@ void ridUnused() {
     }
 }
 
+/*优化代码（调整While中的表达式）
+ 输入：无
+ 输出：无
+ */
 void ridWhile() {
     typedef struct whileNo{
         vector<quadElement>::iterator wh;

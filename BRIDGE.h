@@ -51,22 +51,25 @@ string getSymbolResult() {
     string temp;
     int format = 20;
     for (int i = 0; i < symbol.size(); i++) {
-        string st = intToString(i);
-        temp += st;
-        for (int i = (int)st.length(); i < format; i ++) temp += " ";
-        
-        st = symbol[i].NAME;
-        temp += st;
-        for (int i = (int)st.length(); i < format; i ++) temp += " ";
-        
-        st = symbol[i].TYP;
-        temp += st;
-        for (int i = (int)st.length(); i < format; i ++) temp += " ";
-        
-        st = symbol[i].CAT;
-        temp += st;
-        for (int i = (int)st.length(); i < format; i ++) temp += " ";
-        temp += "\n";
+        if (symbol[i].CAT != "tv"){
+            string st = intToString(i);
+            temp += st;
+            for (int i = (int)st.length(); i < format; i ++) temp += " ";
+            
+            st = symbol[i].NAME;
+            temp += st;
+            for (int i = (int)st.length(); i < format; i ++) temp += " ";
+            
+            st = symbol[i].TYP;
+            temp += st;
+            for (int i = (int)st.length(); i < format; i ++) temp += " ";
+            
+            st = symbol[i].CAT;
+            temp += st;
+            for (int i = (int)st.length(); i < format; i ++) temp += " ";
+            temp += "\n";
+
+        }
     }
     
     return temp;

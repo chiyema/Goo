@@ -11,7 +11,7 @@
 
 
 /*文法分析主程序
- 输入：无
+ 输入：是否要优化（布尔型）
  输出：无
  */
 void grammarMain(bool optim){
