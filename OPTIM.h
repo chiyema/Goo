@@ -38,27 +38,30 @@ void delQuad(int i){
 bool isFourthDiff(string first, string second, string third, string fourth, int loc){
     for (vector<quadElement>::iterator it = quad.begin(); it != quad.end();)
     {
-        for (int j = 0; j < quad.size();){
-            if (j == loc)
-            {
+        int j = 1;
+        if (j == loc)
+        {
+            if (j != quad.size()){
                 j++;
                 it++;
             }
+            else return false;
+            
+        }
+        else
+        {
+            if (quad[j].first == quad[loc].first&&quad[j].second == quad[loc].second&&quad[j].third == quad[loc].third&&quad[j].fourth != quad[loc].fourth)
+            {
+                position = j;
+                return true;
+            }
             else
             {
-                if (quad[j].first == quad[loc].first&&quad[j].second == quad[loc].second&&quad[j].third == quad[loc].third&&quad[j].fourth != quad[loc].fourth)
-                {
-                    position = j;
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
+                return false;
             }
         }
     }
-    return true;
+    return false;
 }
 
 
@@ -104,7 +107,7 @@ bool isVarexp(int i){
     return false;
 }
 
-void optimMain(){
+void optim(){
     for (int i = 0; i < quad.size(); i++){
         if (isFourthDiff(quad[i].first, quad[i].second, quad[i].third, quad[i].fourth, i)) {
             if (isConstant(quad[i].second) != -1 && isConstant(quad[i].third) != -1){//常值表达式节省
@@ -118,9 +121,9 @@ void optimMain(){
                 delQuad(position);
             }
             else if (isVarexp(i)){//公共子表达式节省
-                int k = i;
                 int judg1;
                 int judg2;
+                int k = i;
                 do{
                     judg1 = findEqu(quad[k].second, k);
                     k++;
@@ -161,12 +164,13 @@ void optimMain(){
                             delQuad(j);
                         }
                         else{
-                            int pos3 = findEqu(quad[j].fourth,j);
+                            int pos3;
+                            int n = j;
                             if (different != 4){
                                 do{
-                                    findEqu(quad[j].fourth, pos3);
-                                }
-                                while (different == 4 || (quad[pos3].first == "end"&&quad[pos3].second == "while"));
+                                    pos3 = findEqu(quad[n].fourth, j);
+                                    n++;
+                                }while (different == 4 || (quad[pos3].first == "end"&&quad[pos3].second == "while"));
                                 if (different == 4){
                                     insertQuad(Loopadd, pos3);
                                 }
@@ -180,4 +184,88 @@ void optimMain(){
             cout << "不需要优化" << endl;
         }
     }
+}
+
+
+void optimMain(){
+    ridConstant();
+    ridRepeat();
+}
+
+void ridConstant(){
+    vector<quadElement>::iterator it;
+    vector<vector<quadElement>::iterator> toBeDeleted;
+
+    for (it = quad.begin(); it != quad.end(); it++) {
+        if (isConstant((*it).second) != -1 && isConstant((*it).third) != -1){
+            NSString* secondNSString = [NSString stringWithUTF8String:(*it).second.c_str()];
+            NSString* thirdNSString = [NSString stringWithUTF8String:(*it).third.c_str()];
+            float secondFloat = [secondNSString floatValue];
+            float thirdFloat = [thirdNSString floatValue];
+            if ((*it).first == "+") secondFloat += thirdFloat;
+            else if ((*it).first == "-") secondFloat -= thirdFloat;
+            else if ((*it).first == "*") secondFloat *= thirdFloat;
+            else if ((*it).first == "/") secondFloat /= thirdFloat;
+            const char* programChar;
+            
+            if (isDecimal((*it).second) || isDecimal((*it).third)) {
+                NSString *stringFloat = [NSString stringWithFormat:@"%f",secondFloat];
+                programChar = [stringFloat UTF8String];
+            }
+            else if (!isDecimal((*it).second) && !isDecimal((*it).third)) {
+                int secondInt = (int) secondFloat;
+                NSString *stringInt = [NSString stringWithFormat:@"%d",secondInt];
+                programChar = [stringInt UTF8String];
+            }
+            
+            vector<quadElement>::iterator it1;
+            for (it1 = it; it1 != quad.end(); it1++) {
+                if ((*it1).second == (*it).fourth) (*it1).second = programChar;
+                if ((*it1).third == (*it).fourth) (*it1).third = programChar;
+            }
+            (*it).second = programChar;
+            (*it).third = "";
+            (*it).first = "=";
+            toBeDeleted.push_back(it);
+        }
+    }
+    
+    vector<vector<quadElement>::iterator>::iterator it2;
+    for (it2 = toBeDeleted.begin(); it2 != toBeDeleted.end(); it2++) {
+        quad.erase(*it2);
+    }
+
+    
+}
+
+void ridRepeat(){
+    vector<quadElement>::iterator it1;
+    vector<quadElement>::iterator it2;
+    vector<quadElement>::iterator it3;
+    vector<vector<quadElement>::iterator> toBeDeleted;
+
+    for (it1 = quad.begin(); it1 != quad.end() - 1; it1++) {
+        for (it2 = it1 + 1; it2 != quad.end(); it2++) {
+            if ((*it1).first == (*it2).first && (*it1).second == (*it2).second && (*it1).third == (*it2).third){
+                if (symbol[isSymbol((*it1).fourth)].CAT == "tv" && symbol[isSymbol((*it2).fourth)].CAT == "tv"){
+                    bool isEdited = false;
+                    for (it3 = it1; it3 != it2; it3++)
+                        if ((*it3).fourth == (*it1).second || (*it3).fourth == (*it1).third) isEdited = true;
+                    if (!isEdited) {
+                        for (it3 = it1 + 1; it3 != it2; it3++) {
+                            if ((*it3).second == (*it1).fourth) (*it3).second = (*it2).fourth;
+                            if ((*it3).third == (*it1).fourth) (*it3).third = (*it2).fourth;
+                        }
+                        (*it1).fourth = (*it2).fourth;
+                        toBeDeleted.push_back(it2);
+                    }
+                }
+            }
+        }
+    }
+    vector<vector<quadElement>::iterator>::iterator it4;
+    for (it4 = toBeDeleted.begin(); it4 != toBeDeleted.end(); it4++) {
+        quad.erase(*it4);
+    }
+
 }

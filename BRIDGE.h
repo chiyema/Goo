@@ -18,6 +18,8 @@
 #include "GRAMMAR.h"
 #include "OPTIM.h"
 #include "TARGET.h"
+#import <Cocoa/Cocoa.h>
+
 
 
 

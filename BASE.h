@@ -14,6 +14,9 @@
 #include<iomanip>
 #include <stdlib.h>
 #include <cstdlib>
+#include <cstdio>
+#include <stdio.h>
+#include <stdlib.h>
 
 using namespace std;
 
