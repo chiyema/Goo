@@ -25,6 +25,7 @@
 
 @property (unsafe_unretained) IBOutlet NSTextView *targetView;
 
+@property (weak) IBOutlet NSButton *doesOptim;
 
 
 - (IBAction)compileProgram:(id)sender;

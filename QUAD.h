@@ -83,7 +83,7 @@ void quadMain(){
         }
     }
     
-    if (errorMessage == "") targetMain();
+    if (errorMessage == "") optimMain();
 }
 
 

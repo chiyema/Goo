@@ -16,7 +16,9 @@
 #include "MORPHOLOGY.h"
 #include "QUAD.h"
 #include "GRAMMAR.h"
+#include "OPTIM.h"
 #include "TARGET.h"
+
 
 
 /*获取Token序列
